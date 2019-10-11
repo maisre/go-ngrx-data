@@ -4,6 +4,10 @@ const entityMetadata: EntityMetadataMap = {
   Post: {}
 };
 
+
+const pluralNames = { Post: 'Post' };
+
 export const entityConfig = {
-  entityMetadata
+  entityMetadata,
+  pluralNames
 };
