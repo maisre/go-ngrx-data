@@ -1,7 +1,16 @@
 <h2>CRUD for posts</h2>
+
 <button (click)="create()">Create</button>
 <button (click)="read()">Read</button>
 <button (click)="update()">Update</button>
 <button (click)="delete()">Delete</button>
 
 <button (click)="getAll()">Get All</button>
+
+<ul>
+    
+    <li *ngFor="let p of posts$ |async">
+        <p>{{p.id}} {{p.title}} {{p.content}}</p>
+    </li>
+
+</ul>

@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 var postMap map[string]post
@@ -34,16 +35,22 @@ func main() {
 	postMap["1"] = newPost("1")
 	postMap["2"] = newPost("2")
 
-	r.HandleFunc("/post/{postID}", getSinglePost).Methods("GET")
-	r.HandleFunc("/post/{postID}", updatePost).Methods("PUT")
-	r.HandleFunc("/post/{postID}", deletePost).Methods("DELETE")
-	r.HandleFunc("/post/", createPost).Methods("POST")
-	r.HandleFunc("/post/", getAllPosts).Methods("GET")
+	r.HandleFunc("/api/post/{postID}", getSinglePost).Methods("GET")
+	r.HandleFunc("/api/post/{postID}", updatePost).Methods("PUT")
+	r.HandleFunc("/api/post/{postID}", deletePost).Methods("DELETE")
+	r.HandleFunc("/api/post/", createPost).Methods("POST")
+	r.HandleFunc("/api/post/", getAllPosts).Methods("GET")
 
 	http.Handle("/", r)
 
+	// Solves Cross Origin Access Issue
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:4200"},
+	})
+	handler := c.Handler(r)
+
 	srv := &http.Server{
-		Handler: r,
+		Handler: handler,
 		Addr:    ":" + os.Getenv("PORT"),
 	}
 
@@ -132,8 +139,13 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAllPosts(w http.ResponseWriter, r *http.Request) {
+	v := make([]post, 0, len(postMap))
 
-	jsonBytes, err := structToJSON(postMap)
+	for _, value := range postMap {
+		v = append(v, value)
+	}
+
+	jsonBytes, err := structToJSON(v)
 	if err != nil {
 		fmt.Print(err)
 	}
