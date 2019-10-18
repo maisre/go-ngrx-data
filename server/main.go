@@ -40,12 +40,15 @@ func main() {
 	r.HandleFunc("/api/post/{postID}", deletePost).Methods("DELETE")
 	r.HandleFunc("/api/post/", createPost).Methods("POST")
 	r.HandleFunc("/api/post/", getAllPosts).Methods("GET")
+	r.HandleFunc("/api/post/", optionReply).Methods("OPTIONS")
+	r.HandleFunc("/api/post/{postID}", optionReply).Methods("OPTIONS")
 
 	http.Handle("/", r)
 
 	// Solves Cross Origin Access Issue
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:4200"},
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 	})
 	handler := c.Handler(r)
 
@@ -163,4 +166,9 @@ func structToJSON(data interface{}) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+func optionReply(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(200)
+	return
 }

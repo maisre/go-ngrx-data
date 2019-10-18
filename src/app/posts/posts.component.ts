@@ -12,6 +12,7 @@ export class PostsComponent implements OnInit {
   
   posts$: Observable<Post[]>;
   loading$: Observable<boolean>;
+  postToEdit: Post;
 
   constructor(private postService: PostsService) { 
     this.posts$ = postService.entities$;
@@ -19,7 +20,9 @@ export class PostsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAll();
   }
+  
 
   getAll(){
     this.postService.getAll();
@@ -38,18 +41,19 @@ export class PostsComponent implements OnInit {
   }
 
   update(updatedPost: Post){
-    let crap = new Post();
-    crap.content = "updated";
-    crap.title = 'title';
-    crap.id = '1';
-    this.postService.update(crap);
+    this.postService.update(updatedPost);
   }
 
   delete(post: Post){
-    let crap = new Post();
-    crap.content = "contetnt";
-    crap.title = 'title';
-    crap.id = '1';
-    this.postService.delete(crap);
+    this.postService.delete(post);
+  }
+
+  editPost(post: Post){
+    this.postToEdit = post;
+  }
+
+  saveEdits(){
+    this.update(this.postToEdit);
+    this.postToEdit = undefined;
   }
 }

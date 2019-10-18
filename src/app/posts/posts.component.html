@@ -10,7 +10,19 @@
 <ul>
     
     <li *ngFor="let p of posts$ |async">
-        <p>{{p.id}} {{p.title}} {{p.content}}</p>
+        <div>
+            
+            <div>{{p.id}} {{p.title}} {{p.content}}</div>
+            <button (click)="editPost(p)">Edit</button>
+            <button (click)="delete(p)">Delete</button>
+        </div>
     </li>
 
 </ul>
+
+<div *ngIf="postToEdit">
+    <input [(ngModel)]="postToEdit.id" />
+    <input [(ngModel)]="postToEdit.title" />
+    <input [(ngModel)]="postToEdit.content" />
+    <button (click)="saveEdits()">Save</button>
+</div>
