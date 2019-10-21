@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -129,8 +130,10 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	t.ID = strconv.Itoa(len(postMap) + 1)
 	_, prs := postMap[t.ID]
 	if prs {
+		fmt.Println("exiting because its there")
 		w.WriteHeader(400)
 		return
 	}

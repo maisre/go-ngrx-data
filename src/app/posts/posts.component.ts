@@ -13,6 +13,7 @@ export class PostsComponent implements OnInit {
   posts$: Observable<Post[]>;
   loading$: Observable<boolean>;
   postToEdit: Post;
+  newPost: Post = new Post();
 
   constructor(private postService: PostsService) { 
     this.posts$ = postService.entities$;
@@ -29,11 +30,7 @@ export class PostsComponent implements OnInit {
   }
 
   create(newPost: Post){
-    let crap = new Post();
-    crap.content = "contetnt";
-    crap.title = 'title';
-    crap.id = '1';
-    this.postService.add(crap);
+    this.postService.add(newPost);
   }
 
   read(){
@@ -55,5 +52,11 @@ export class PostsComponent implements OnInit {
   saveEdits(){
     this.update(this.postToEdit);
     this.postToEdit = undefined;
+  }
+
+  createNewPost(){
+    this.create(this.newPost);
+    this.newPost = new Post();
+    this.getAll();
   }
 }
